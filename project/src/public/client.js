@@ -2,6 +2,7 @@ let store = {
     user: { name: "Student" },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    // roverManifest: '',
 }
 
 // add our markup to the page
@@ -78,7 +79,9 @@ const ImageOfTheDay = (apod) => {
     }
 
     // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
+    if (!apod.image) {
+        return console.log('Data not available')
+    } else if (apod.media_type === "video") {
         return (`
             <p>See today's featured video <a href="${apod.url}">here</a></p>
             <p>${apod.title}</p>
@@ -91,16 +94,47 @@ const ImageOfTheDay = (apod) => {
         `)
     }
 }
+const roverInfo = (rovers) => {
+    return rovers[0]
+}
 
 // ------------------------------------------------------  API CALLS
 
 // Example API call
-const getImageOfTheDay = (state) => {
+const getImageOfTheDay = async (state) => {
     let { apod } = state
 
-    fetch(`http://localhost:3000/apod`)
+    const data = await fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
+        console.log(store)
+    return data
+    
+}
 
+// Rovers API call
+
+const getRoverManifest = async (state) => {
+    let { roverManifest } = state
+    // let { rovers } = state
+    rover = roverInfo(state.rovers)
+    const data = await fetch(`http://localhost:3000/roverInfo/${rover}`)
+        .then(res => res.json())
+        .then(roverManifest => updateStore(store, { roverManifest }))
+        console.log(store)
     return data
 }
+
+const getRoverPhotos = async (state) => {
+    let { roverManifest } = state
+    // let { rovers } = state
+    rover = roverInfo(state.rovers)
+    const data = await fetch(`http://localhost:3000/roverPhotos/${rover}`)
+        .then(res => res.json())
+        .then(photos => updateStore(store, { photos }))
+        console.log(store)
+    return data
+}
+
+getRoverManifest(store)
+getRoverPhotos(store)

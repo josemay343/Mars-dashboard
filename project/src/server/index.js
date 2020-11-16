@@ -3,6 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const fetch = require('node-fetch')
 const path = require('path')
+const reload = require('reload')
 
 const app = express()
 const port = 3000
@@ -13,7 +14,29 @@ app.use(bodyParser.json())
 app.use('/', express.static(path.join(__dirname, '../public')))
 
 // your API calls
+app.get('/roverInfo/:roverName', async (req, res) => {
+    try {
+        let name = req.params['roverName']
+        console.log(name)
+        let manifest = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/${name}/?api_key=${process.env.API_KEY}`)
+            .then(res => res.json());
+        res.send({ manifest })
+    } catch (err) {
+        console.log('error:', err);
+    }
+})
 
+app.get('/roverPhotos/:roverName', async (req, res) => {
+    try {
+        let name = req.params['roverName']
+        console.log(name)
+        let manifest = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=2940&api_key=${process.env.API_KEY}`)
+            .then(res => res.json());
+        res.send({ manifest })
+    } catch (err) {
+        console.log('error:', err);
+    }
+})
 // example API call
 app.get('/apod', async (req, res) => {
     try {
@@ -26,3 +49,4 @@ app.get('/apod', async (req, res) => {
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+reload(app);
