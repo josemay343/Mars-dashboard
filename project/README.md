@@ -1,3 +1,23 @@
+# Sources
+- www.udacity.com
+- developer.mozilla.org
+- www.stackoverflow.com
+- www.w3schools.com
+- https://getbootstrap.com/
+
+# Dependencies
+You will need to install the following tools to run this program.
+
+- Express
+- Nodemon
+- Body parser
+- Dotenv
+- ImmutableJS
+- Reload
+- Bootstrap
+
+
+
 # Functional Programming with Javascript 
 
 ## Student Instructions
